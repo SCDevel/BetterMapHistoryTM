@@ -5,6 +5,6 @@ namespace Settings {
     [Setting name="Use colored map name" category="UI"]
     bool Setting_ColoredMapName = true;
 
-    [Setting name="Perferred timestamp format" category="UI"]
+    [Setting name="Preferred timestamp format" category="UI"]
     string Setting_TimestampFormat = "%Y-%m-%dT%H:%M:%S (%z)";
 }

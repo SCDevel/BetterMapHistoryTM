@@ -1,7 +1,7 @@
 namespace GUI {
     void Render() {
         bool isOpened = Settings::Setting_ShowMenu;
-        if (!isOpened) return;
+        if (!isOpened or !UI::IsOverlayShown()) return;
 
         UI::PushStyleColor(UI::Col::WindowBg,vec4(.1,.1,.1,1));
         UI::PushStyleVar(UI::StyleVar::WindowPadding, vec2(10, 10));
