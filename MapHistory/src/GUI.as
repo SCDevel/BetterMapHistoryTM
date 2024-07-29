@@ -9,7 +9,7 @@ namespace GUI {
         UI::PushStyleVar(UI::StyleVar::FramePadding, vec2(10, 6));
         UI::PushStyleVar(UI::StyleVar::WindowTitleAlign, vec2(.5, .5));
         UI::SetNextWindowSize(450, 300);
-        if(UI::Begin("Map History", Settings::Setting_ShowMenu)) {
+        if(UI::Begin("TMX Map History", Settings::Setting_ShowMenu)) {
             array<Map> maps = history.GetMaps();
             if(UI::BeginTable("history_table", 3)) {
                 UI::TableSetupColumn("Name", UI::TableColumnFlags::WidthStretch);

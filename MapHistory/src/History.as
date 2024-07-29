@@ -47,7 +47,7 @@ class History {
     // Load History From File
     void LoadHistory() {
         Json::Value history = Json::FromFile(history_file_location);
-        if(history.GetType() != Json::Type::Array) throw("Error - LoadHistory: Json File not in Type of Array!");
+        if(history.GetType() != Json::Type::Array) throw("TMX Map History - LoadHistory: Json File not in Type of Array!");
         
         for(uint i = 0; i < history.Length; i++) {
 
@@ -69,7 +69,7 @@ class History {
                 //}
                 maps.InsertLast(map);
             } catch {
-                error("Map History: A track was unable to be loaded.");
+                error("TMX Map History: A track was unable to be loaded.");
             }
         }
         SortByLastPlayed();
@@ -92,7 +92,7 @@ class History {
                 //}
                 history.Add(map);
             } catch {
-                error("Map History: Was unable to convert map to JSON data (unable to save map): " + Text::StripFormatCodes(maps[i].name) + " (" + tostring(maps[i].MX_ID) + ").");
+                error("TMX Map History: Was unable to convert map to JSON data (unable to save map): " + Text::StripFormatCodes(maps[i].name) + " (" + tostring(maps[i].MX_ID) + ").");
             }
 
         }

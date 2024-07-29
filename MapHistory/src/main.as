@@ -36,7 +36,7 @@ void Render() {
 
 void RenderMenu() {
 
-  if(UI::MenuItem("Map History", "", Settings::Setting_ShowMenu)) {
+  if(UI::MenuItem("TMX Map History", "", Settings::Setting_ShowMenu)) {
     Settings::Setting_ShowMenu = !Settings::Setting_ShowMenu;
   }
 }
