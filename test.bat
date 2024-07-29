@@ -1,0 +1,1 @@
+xcopy /y/s/e MapHistory C:\Users\%USERNAME%\OpenplanetNext\Plugins\MapHistory
