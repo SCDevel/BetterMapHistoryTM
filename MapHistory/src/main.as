@@ -31,12 +31,11 @@ void Update(float dt) {
 }
 
 void Render() {
-  GUI::Render();
+  HistoryWindow::Render();
 }
 
 void RenderMenu() {
-
-  if(UI::MenuItem("TMX Map History", "", Settings::Setting_ShowMenu)) {
+  if(UI::MenuItem("\\$FB0" + Icons::Calendar + "\\$z TMX Map History", "", Settings::Setting_ShowMenu)) {
     Settings::Setting_ShowMenu = !Settings::Setting_ShowMenu;
   }
 }

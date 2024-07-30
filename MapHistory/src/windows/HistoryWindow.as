@@ -1,4 +1,4 @@
-namespace GUI {
+namespace HistoryWindow {
     void Render() {
         bool isOpened = Settings::Setting_ShowMenu;
         if (!isOpened or !UI::IsOverlayShown()) return;
@@ -14,7 +14,7 @@ namespace GUI {
             if(UI::BeginTable("history_table", 3)) {
                 UI::TableSetupColumn("Name", UI::TableColumnFlags::WidthStretch);
                 UI::TableSetupColumn("Last Played", UI::TableColumnFlags::WidthStretch);
-                UI::TableSetupColumn("   " + Icons::Map, UI::TableColumnFlags::WidthFixed);
+                UI::TableSetupColumn("Actions", UI::TableColumnFlags::WidthFixed);
                 UI::TableHeadersRow();
 
                 UI::ListClipper clipper(maps.Length);
@@ -34,13 +34,13 @@ namespace GUI {
                         UI::TableSetColumnIndex(1); // last_played datetime
                         UI::Text(Time::FormatString(Settings::Setting_TimestampFormat, maps[i].last_played));
                         UI::TableSetColumnIndex(2); // Button that opens to the TMX window
-                        UI::PushStyleColor(UI::Col::Button, UI::HSV(0.5f, 0.6f, 0.6f));
-                        UI::PushStyleColor(UI::Col::ButtonHovered, UI::HSV(0.5f, 0.7f, 0.7f));
-                        UI::PushStyleColor(UI::Col::ButtonActive, UI::HSV(0.5f, 0.8f, 0.8f));
-                        if (UI::Button(Icons::Kenney::InfoCircle)) {
+                        if (UI::ColoredButton(Icons::InfoCircle, 0.5f)) {
                             ManiaExchange::ShowMapInfo(maps[i].MX_ID);
                         }
-                        UI::PopStyleColor(3);
+                        UI::SameLine();
+                        if (UI::ColoredButton(Icons::Trash, 1.0f)) {
+                            history.RemoveMap(maps[i]);
+                        }
                         UI::PopID();
                     }
                 }

@@ -20,14 +20,17 @@ class History {
         return this.maps;
     }
 
+    void RemoveMap(const Map map) {
+        uint i = maps.Find(map);
+        maps.RemoveAt(i);
+    }
+
     void AddMap(const Map map) {
         maps.InsertAt(0, map);
     }
 
     void UpdateMap(const Map map) {
-        //map.UpdateLastPlayed();
-        uint i = maps.Find(map);
-        maps.RemoveAt(i);
+        RemoveMap(map);
         maps.InsertAt(0, map);
     }
 
@@ -80,6 +83,7 @@ class History {
         Json::Value history = Json::Array();
 
         for(uint i = 0; i < maps.Length; i++) {
+            if (i >= Settings::Setting_MaxMaps) continue;
             try {
                 Json::Value map = Json::Object();
                 map["MX_ID"] = maps[i].MX_ID;
