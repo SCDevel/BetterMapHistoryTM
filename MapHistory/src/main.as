@@ -10,24 +10,25 @@ void Main() {
 
 void Update(float dt) {
   auto app = cast<CTrackMania>(GetApp());
-    auto mapInfo = ManiaExchange::GetCurrentMapInfo();
-    int mapId = mapInfo["TrackID"];
-    string gbxMapName = mapInfo["GbxMapName"];
-  
-    if (mapId != mapUid && mapId >= 0 && app.Editor is null) { 
-      mapUid = mapId;
-      @currentMap = history.GetMap(mapUid);
-      if (currentMap is null) {
-        Map map = Map();
-        map.MX_ID = mapUid;
-        map.name = gbxMapName;
-        map.UpdateLastPlayed();
-        history.AddMap(map);
-      } else {
-        history.UpdateMap(currentMap);
-      }
-      history.SaveHistory();
+  auto mapInfo = ManiaExchange::GetCurrentMapInfo();
+  int mapId = mapInfo["TrackID"];
+  string gbxMapName = mapInfo["GbxMapName"];
+
+  if (mapId != mapUid && mapId >= 0 && app.Editor is null) { // checks if in map
+    mapUid = mapId;
+    @currentMap = history.GetMap(mapUid);
+    if (currentMap is null) {
+      Map map = Map();
+      map.MX_ID = mapUid;
+      map.name = gbxMapName;
+      map.UpdateLastPlayed();
+      history.AddMap(map);
+    } else {
+      currentMap.UpdateLastPlayed();
+      history.UpdateMap(currentMap);
     }
+    history.SaveHistory();
+  }
 }
 
 void Render() {
@@ -35,7 +36,7 @@ void Render() {
 }
 
 void RenderMenu() {
-  if(UI::MenuItem("\\$FB0" + Icons::Calendar + "\\$z TMX Map History", "", Settings::Setting_ShowMenu)) {
-    Settings::Setting_ShowMenu = !Settings::Setting_ShowMenu;
+  if(UI::MenuItem("\\$FB0" + Icons::Calendar + "\\$z TMX Map History", "", Settings::ShowMenu)) {
+    Settings::ShowMenu = !Settings::ShowMenu;
   }
 }

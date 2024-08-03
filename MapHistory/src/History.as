@@ -1,11 +1,10 @@
 class History {
-    private string history_file_location = IO::FromStorageFolder("history.json");
     private array<Map> maps;
 
-    History() {
-        if (!IO::FileExists(history_file_location)) {
+    History(const string file = IO::FromStorageFolder("history.json")) {
+        if (!IO::FileExists(file)) {
             Json::Value temp = Json::Array();
-            Json::ToFile(history_file_location, temp);
+            Json::ToFile(file, temp);
         }
     }
 
@@ -29,9 +28,9 @@ class History {
         maps.InsertAt(0, map);
     }
 
-    void UpdateMap(const Map map) {
+    void UpdateMap(const Map map, const uint pos = 0) {
         RemoveMap(map);
-        maps.InsertAt(0, map);
+        maps.InsertAt(pos, map);
     }
 
     void SortByLastPlayed() {
@@ -47,9 +46,19 @@ class History {
         }
     }
 
+    void BackupHistory(const string file = IO::FromStorageFolder("history.json"), const string backup_file = IO::FromStorageFolder("history.json.backup")) {
+        Json::Value history = Json::FromFile(file);
+        Json::ToFile(backup_file, history);
+    }
+
+    void SaveHistory() {
+        BackupHistory();
+        _SaveHistory();
+    }
+
     // Load History From File
-    void LoadHistory() {
-        Json::Value history = Json::FromFile(history_file_location);
+    void LoadHistory(const string file = IO::FromStorageFolder("history.json")) {
+        Json::Value history = Json::FromFile(file);
         if(history.GetType() != Json::Type::Array) throw("TMX Map History - LoadHistory: Json File not in Type of Array!");
         
         for(uint i = 0; i < history.Length; i++) {
@@ -59,41 +68,24 @@ class History {
                 map.MX_ID = history[i].Get("MX_ID");
                 map.name = history[i].Get("Name");
                 map.last_played = history[i].Get("Last_Played");
-                //try {
-                //    if(history[i].Get("records").GetType() != Json::Type::Array) throw("Error - LoadHistory: Map Records for '" + map.MX_ID + "' not in Type of Array!");
-                //    for(uint j = 0; j < history[i].Get("records").Length; j++) {
-                //        MapRecord mapRecord = MapRecord();
-                //        mapRecord.datetime = history[i].Get("records")[j].Get("datetime");
-                //        mapRecord.time = history[i].Get("records")[j].Get("time");
-                //        map.records.InsertLast(mapRecord);
-                //    }
-                //} catch {
-                //    warn("Map History: Was unable to load map records for map: " + Text::StripFormatCodes(map.name) + " (" + tostring(map.MX_ID) + ").");
-                //}
                 maps.InsertLast(map);
             } catch {
                 error("TMX Map History: A track was unable to be loaded.");
             }
         }
-        SortByLastPlayed();
     }
 
     // Save History to file
-    void SaveHistory() {
+    void _SaveHistory(const string file = IO::FromStorageFolder("history.json")) {
         Json::Value history = Json::Array();
 
         for(uint i = 0; i < maps.Length; i++) {
-            if (i >= Settings::Setting_MaxMaps) continue;
+            if (i >= Settings::MaxMaps) continue;
             try {
                 Json::Value map = Json::Object();
                 map["MX_ID"] = maps[i].MX_ID;
                 map["Name"] = maps[i].name;
                 map["Last_Played"] = maps[i].last_played;
-                map["records"] = Json::Array();
-                //for(uint j = 0; j < maps[i].records.Length; j++) {
-                //    map["records"][j]["datetime"] = maps[i].records[j].datetime;
-                //    map["records"][j]["time"] = maps[i].records[j].time;
-                //}
                 history.Add(map);
             } catch {
                 error("TMX Map History: Was unable to convert map to JSON data (unable to save map): " + Text::StripFormatCodes(maps[i].name) + " (" + tostring(maps[i].MX_ID) + ").");
@@ -101,7 +93,7 @@ class History {
 
         }
 
-        Json::ToFile(history_file_location, history);
+        Json::ToFile(file, history);
     }
 }
 
