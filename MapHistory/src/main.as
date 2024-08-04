@@ -1,15 +1,16 @@
 History history;
 Map@ currentMap;
+auto app; 
 
 int mapUid = -1;
 
 void Main() {
+  app = cast<CTrackMania>(GetApp());
   history.LoadHistory();
   history.SortByLastPlayed();
 }
 
 void Update(float dt) {
-  auto app = cast<CTrackMania>(GetApp());
   auto mapInfo = ManiaExchange::GetCurrentMapInfo();
   int mapId = mapInfo["TrackID"];
   string gbxMapName = mapInfo["GbxMapName"];
