@@ -9,7 +9,6 @@ int mapUid = -1;
 void Main() {
   CTrackMania@ app = cast<CTrackMania>(GetApp());
   history.LoadHistory();
-  history.SortByLastPlayed();
 }
 
 void Update(float dt) {
@@ -34,7 +33,7 @@ void Update(float dt) {
       history.AddMap(map);
     } else {
       currentMap.UpdateLastPlayed();
-      history.UpdateMap(currentMap);
+      history.AddMap(currentMap);
     }
     history.SaveHistory();
   }

@@ -27,7 +27,8 @@ namespace HistoryWindow {
 
                 UI::TableSortSpecs@ sortSpecs = UI::TableGetSortSpecs();
                 if (sortSpecs.Dirty) {
-                    history.SortByLastPlayed(sortSpecs.Specs[0].SortDirection);
+                    history.sortDirection = sortSpecs.Specs[0].SortDirection;
+                    history.SortByLastPlayed(history.sortDirection);
                     sortSpecs.Dirty = false;
                 }
 

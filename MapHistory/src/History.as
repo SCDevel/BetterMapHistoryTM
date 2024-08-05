@@ -1,5 +1,6 @@
 class History {
     private array<Map> maps;
+    UI::SortDirection sortDirection = UI::SortDirection::Ascending;
 
     History(const string file = IO::FromStorageFolder("history.json")) {
         if (!IO::FileExists(file)) {
@@ -20,17 +21,33 @@ class History {
     }
 
     void RemoveMap(const Map map) {
-        uint i = maps.Find(map);
-        maps.RemoveAt(i);
-    }
-
-    void AddMap(const Map map) {
-        maps.InsertAt(0, map);
+        try {
+            uint i = maps.Find(map);
+            maps.RemoveAt(i);
+        } catch {
+            print("Map not found, unable to remove from history!");
+        }
     }
 
     void UpdateMap(const Map map, const uint pos = 0) {
         RemoveMap(map);
         maps.InsertAt(pos, map);
+    }
+
+    void AddMap(const Map map) {
+        RemoveMap(map);
+        switch (sortDirection) {
+            case UI::SortDirection::Ascending:
+                maps.InsertAt(0, map);
+                break;
+            case UI::SortDirection::Descending:
+                maps.InsertLast(map);
+                break;
+            case UI::SortDirection::None:
+                maps.InsertAt(0);
+                history.SortByLastPlayed();
+                break;
+        }
     }
 
     void SortByLastPlayed(UI::SortDirection sortDirection = UI::SortDirection::Ascending) {
