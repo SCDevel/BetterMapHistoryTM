@@ -36,7 +36,7 @@ class History {
     void SortByLastPlayed() {
         for (uint i = 0; i < maps.Length - 1; i++) {
             for (uint j = 0; j < maps.Length - i - 1; j++) {
-                if (maps[j].last_played > maps[j + 1].last_played) {
+                if (maps[j].last_played < maps[j + 1].last_played) {
                     // Swap the elements.
                     Map temp = maps[j];
                     maps[j] = maps[j + 1];

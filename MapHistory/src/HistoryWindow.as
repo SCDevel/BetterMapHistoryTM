@@ -9,7 +9,14 @@ namespace HistoryWindow {
         UI::PushStyleVar(UI::StyleVar::FramePadding, vec2(10, 6));
         UI::PushStyleVar(UI::StyleVar::WindowTitleAlign, vec2(.5, .5));
         UI::SetNextWindowSize(500, 300);
-        if(UI::Begin("TMX Map History", Settings::ShowMenu)) {
+        int windowFlags = Settings::IsDevMode ? UI::WindowFlags::MenuBar + UI::WindowFlags::NoCollapse : UI::WindowFlags::NoCollapse;
+        if(UI::Begin("TMX Map History", Settings::ShowMenu, windowFlags)) {
+            if (Settings::IsDevMode && UI::BeginMenuBar()) {
+                if (UI::Button(Icons::Refresh)) {
+                    history.SortByLastPlayed();
+                }
+                UI::EndMenuBar();
+            }
             array<Map> maps = history.GetMaps();
             if(UI::BeginTable("history_table", 4)) {
                 UI::TableSetupColumn("Name", UI::TableColumnFlags::WidthStretch);
@@ -25,7 +32,7 @@ namespace HistoryWindow {
                         UI::PushID("TMXMHMapHistory_"+i);
                         UI::TableNextRow();
                         if (i > 0) { // adds a sperator line between days
-                        if (Math::Floor(maps[i - 1].last_played / 86400) != Math::Floor(maps[i].last_played / 86400)) {
+                        if ((maps[i - 1].last_played - maps[i].last_played) / 86400 > 0) {
                             for(int j = 0; j < 4; j++) {
                                 UI::TableSetColumnIndex(j);
                                 UI::Separator();
@@ -43,12 +50,31 @@ namespace HistoryWindow {
                         }
                         UI::TableSetColumnIndex(1); // last_played datetime
                         UI::Text(Time::FormatString(Settings::TimestampFormat, maps[i].last_played));
+                        if (UI::IsItemHovered()) {
+                            UI::BeginTooltip();
+                            UI::Text("TIME = " + tostring(maps[i].last_played));
+                            UI::EndTooltip();
+                        }
                         UI::TableSetColumnIndex(2); // Button that opens to the TMX window
                         if (UI::ColoredButton(Icons::InfoCircle, 0.5f)) {
                             ManiaExchange::ShowMapInfo(maps[i].MX_ID);
                         }
                         UI::TableSetColumnIndex(3); // Button that delete's the map
                         if (UI::BeginMenu("")) {
+                            if (Settings::IsDevMode) {
+                                if (UI::MenuItem(Icons::ArrowUp) && i > 0) {
+                                    history.UpdateMap(maps[i], 0);
+                                }
+                                if (UI::MenuItem(Icons::LongArrowUp) && i > 0) {
+                                    history.UpdateMap(maps[i], i - 1);
+                                }
+                                if (UI::MenuItem(Icons::LongArrowDown) && i < maps.Length) {
+                                    history.UpdateMap(maps[i], i + 1);
+                                }
+                                if (UI::MenuItem(Icons::ArrowDown) && i < maps.Length) {
+                                    history.UpdateMap(maps[i], maps.Length - 1);
+                                }
+                            }
                             UI::Separator();
                             if (UI::MenuItem("\\$F00\\$oD E L E T E")) {
                                 history.RemoveMap(maps[i]);

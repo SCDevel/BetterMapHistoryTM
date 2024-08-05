@@ -1,21 +1,29 @@
 History history;
+Json::Value mapInfo;
 Map@ currentMap;
-auto app; 
-
+CTrackMania@ app; 
 int mapUid = -1;
 
+#if DEPENDENCY_MANIAEXCHANGE
+
 void Main() {
-  app = cast<CTrackMania>(GetApp());
+  CTrackMania@ app = cast<CTrackMania>(GetApp());
   history.LoadHistory();
   history.SortByLastPlayed();
 }
 
 void Update(float dt) {
-  auto mapInfo = ManiaExchange::GetCurrentMapInfo();
+  // try to get map info but return if error.
+  try {
+    mapInfo = ManiaExchange::GetCurrentMapInfo();
+  } catch {
+    return;
+  }
+  
   int mapId = mapInfo["TrackID"];
   string gbxMapName = mapInfo["GbxMapName"];
 
-  if (mapId != mapUid && mapId >= 0 && app.Editor is null) { // checks if in map
+  if (mapId != mapUid && mapId >= 0) { // checks if in map
     mapUid = mapId;
     @currentMap = history.GetMap(mapUid);
     if (currentMap is null) {
@@ -41,3 +49,9 @@ void RenderMenu() {
     Settings::ShowMenu = !Settings::ShowMenu;
   }
 }
+
+#else
+
+error("'DEPENDENCY_MANIAEXCHANGE' is missing");
+
+#endif
