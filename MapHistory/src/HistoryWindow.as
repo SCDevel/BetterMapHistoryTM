@@ -18,12 +18,18 @@ namespace HistoryWindow {
                 UI::EndMenuBar();
             }
             array<Map> maps = history.GetMaps();
-            if(UI::BeginTable("history_table", 4)) {
-                UI::TableSetupColumn("Name", UI::TableColumnFlags::WidthStretch);
-                UI::TableSetupColumn("Last Played", UI::TableColumnFlags::WidthStretch);
-                UI::TableSetupColumn("   " + Icons::Map, UI::TableColumnFlags::WidthFixed);
-                UI::TableSetupColumn(Icons::Wrench, UI::TableColumnFlags::WidthFixed);
+            if(UI::BeginTable("history_table", 4, UI::TableFlags::Sortable)) {
+                UI::TableSetupColumn("Name", UI::TableColumnFlags::WidthStretch + UI::TableColumnFlags::NoSort);
+                UI::TableSetupColumn("Last Played", UI::TableColumnFlags::WidthStretch + UI::TableColumnFlags::PreferSortAscending);
+                UI::TableSetupColumn("   " + Icons::Map, UI::TableColumnFlags::WidthFixed + UI::TableColumnFlags::NoSort);
+                UI::TableSetupColumn(Icons::Wrench, UI::TableColumnFlags::WidthFixed + UI::TableColumnFlags::NoSort);
                 UI::TableHeadersRow();
+
+                UI::TableSortSpecs@ sortSpecs = UI::TableGetSortSpecs();
+                if (sortSpecs.Dirty) {
+                    history.SortByLastPlayed(sortSpecs.Specs[0].SortDirection);
+                    sortSpecs.Dirty = false;
+                }
 
                 UI::ListClipper clipper(maps.Length);
                 while(clipper.Step()) {
@@ -52,7 +58,7 @@ namespace HistoryWindow {
                         UI::Text(Time::FormatString(Settings::TimestampFormat, maps[i].last_played));
                         if (UI::IsItemHovered()) {
                             UI::BeginTooltip();
-                            UI::Text("TIME = " + tostring(maps[i].last_played));
+                            UI::Text("SECONDS = " + tostring(maps[i].last_played));
                             UI::EndTooltip();
                         }
                         UI::TableSetColumnIndex(2); // Button that opens to the TMX window

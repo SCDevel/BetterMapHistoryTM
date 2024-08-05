@@ -33,11 +33,21 @@ class History {
         maps.InsertAt(pos, map);
     }
 
-    void SortByLastPlayed() {
+    void SortByLastPlayed(UI::SortDirection sortDirection = UI::SortDirection::Ascending) {
         for (uint i = 0; i < maps.Length - 1; i++) {
             for (uint j = 0; j < maps.Length - i - 1; j++) {
-                if (maps[j].last_played < maps[j + 1].last_played) {
-                    // Swap the elements.
+                bool swap = false;
+                switch (sortDirection) {
+                    case UI::SortDirection::Ascending:
+                        if (maps[j].last_played < maps[j + 1].last_played) swap = true;
+                        break;
+                    case UI::SortDirection::Descending:
+                        if (maps[j].last_played > maps[j + 1].last_played) swap = true;
+                        break;
+                    case UI::SortDirection::None:
+                        break;
+                }
+                if (swap) {
                     Map temp = maps[j];
                     maps[j] = maps[j + 1];
                     maps[j + 1] = temp;
