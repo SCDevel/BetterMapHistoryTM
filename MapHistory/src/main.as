@@ -4,7 +4,7 @@ Map@ currentMap;
 CTrackMania@ app; 
 int mapUid = -1;
 
-#if DEPENDENCY_MANIAEXCHANGE
+#if TMNEXT
 
 void Main() {
   CTrackMania@ app = cast<CTrackMania>(GetApp());
@@ -51,6 +51,8 @@ void RenderMenu() {
 
 #else
 
-error("'DEPENDENCY_MANIAEXCHANGE' is missing");
+void Main() {
+  error("TMNEXT is the only supported game.");
+}
 
 #endif
