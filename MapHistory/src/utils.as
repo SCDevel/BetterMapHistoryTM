@@ -8,3 +8,13 @@ namespace UI {
         return rtn;
     }
 }
+
+namespace Math {
+    float RoundToZero(float f) {
+        if (f > 0) {
+            return Math::Floor(f);
+        } else {
+            return Math::Ceil(f);
+        }
+    }
+}

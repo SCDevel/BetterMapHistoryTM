@@ -38,7 +38,7 @@ namespace HistoryWindow {
                         UI::PushID("TMXMHMapHistory_"+i);
                         UI::TableNextRow();
                         if (i > 0) { // adds a sperator line between days
-                        if ((maps[i - 1].last_played - maps[i].last_played) / 86400 > 0) {
+                        if (Math::RoundToZero((maps[i - 1].last_played - maps[i].last_played) / 86400) != 0) {
                             for(int j = 0; j < 4; j++) {
                                 UI::TableSetColumnIndex(j);
                                 UI::Separator();
