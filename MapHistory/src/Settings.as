@@ -12,5 +12,5 @@ namespace Settings {
     string TimestampFormat = "%Y-%m-%dT%H:%M:%S (%z)";
 
     [Setting name="Dev Mode" description="This just adds more options" category="General"]
-    bool IsDevMode = Meta::IsDeveloperMode();
+    bool IsDevMode = false;
 }

@@ -7,6 +7,7 @@ int mapUid = -1;
 #if TMNEXT
 
 void Main() {
+  Settings::IsDevMode = Meta::IsDeveloperMode();
   CTrackMania@ app = cast<CTrackMania>(GetApp());
   history.LoadHistory();
 }

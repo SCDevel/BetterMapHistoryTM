@@ -44,7 +44,7 @@ class History {
                 maps.InsertLast(map);
                 break;
             case UI::SortDirection::None:
-                maps.InsertAt(0);
+                maps.InsertAt(0, map);
                 history.SortByLastPlayed();
                 break;
         }

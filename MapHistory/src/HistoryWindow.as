@@ -81,6 +81,10 @@ namespace HistoryWindow {
                                 if (UI::MenuItem(Icons::ArrowDown) && i < maps.Length) {
                                     history.UpdateMap(maps[i], maps.Length - 1);
                                 }
+                                if (UI::MenuItem("\\$FF0" + Icons::ClockO)) {
+                                    maps[i].UpdateLastPlayed();
+                                    history.AddMap(maps[i]);
+                                }
                             }
                             UI::Separator();
                             if (UI::MenuItem("\\$F00\\$oD E L E T E")) {
